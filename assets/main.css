@@ -1,0 +1,9 @@
+@import './reset.css';
+
+:root {
+    --color-purple: #4E148C;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}
