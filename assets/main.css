@@ -2,8 +2,19 @@
 
 :root {
     --color-purple: #4E148C;
+    --color-light-purple: rgba(78, 20, 140, .2);
+    --color-lavender: #858AE3;
+    --color-light-lavender: #E8EBF2;
 }
 
 body {
     font-family: 'Inter', sans-serif;
+    color: var(--color-purple);
+    background: #F7F9F7;
+}
+
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 15px;
 }
