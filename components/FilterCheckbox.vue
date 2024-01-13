@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import type { Option } from "~/utils/types";
+import type { Option } from "~/utils/types"
 
 const props = defineProps<{
-    type: string;
-    option: Option;
-}>();
+    option: Option
+    type: string
+}>()
 
 const emit = defineEmits<{
-    toggle: [];
-}>();
+    toggle: []
+}>()
 </script>
 
 <template>
@@ -17,6 +17,7 @@ const emit = defineEmits<{
             type="checkbox"
             :checked="props.option.checked"
             @input="emit('toggle')"
+            @keyup="e => (e.key === 'Enter' ? emit('toggle') : '')"
         />
         <div></div>
         <p>
@@ -31,6 +32,7 @@ label {
     align-items: center;
     gap: 19px;
     cursor: pointer;
+    user-select: none;
 }
 
 input {
@@ -39,6 +41,10 @@ input {
     cursor: pointer;
     height: 0;
     width: 0;
+}
+
+input:focus ~ div {
+    outline: 1px solid;
 }
 
 label.square div {

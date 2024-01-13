@@ -1,9 +1,9 @@
 import type { Filter, Option } from '~/utils/types'
-import { FilterTypes } from '~/utils/enums'
+import { FilterVariant } from '~/utils/enums'
 
 export const asideFiltersData: Filter[] = [
     {
-        type: FilterTypes.Square,
+        type: FilterVariant.Square,
         title: 'Количество пересадок',
         options: [
             {
@@ -30,7 +30,7 @@ export const asideFiltersData: Filter[] = [
         ]
     },
     {
-        type: FilterTypes.Circle,
+        type: FilterVariant.Circle,
         title: 'Компании',
         options: [
             {

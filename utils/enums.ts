@@ -1,4 +1,4 @@
-export enum FilterTypes {
+export enum FilterVariant {
     Square = 'square',
     Circle = 'circle'
 }

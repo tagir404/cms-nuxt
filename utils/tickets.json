@@ -1,0 +1,26 @@
+[
+    {
+        "price": 12680,
+        "departure": "SVO",
+        "arrival": "LED",
+        "flightTimeInMinutes": 270,
+        "transfers": 1,
+        "company": "pobeda"
+    },
+    {
+        "price": 21500,
+        "departure": "SVO",
+        "arrival": "LED",
+        "flightTimeInMinutes": 120,
+        "transfers": 0,
+        "company": "red-wings"
+    },
+    {
+        "price": 23995,
+        "departure": "SVO",
+        "arrival": "LED",
+        "flightTimeInMinutes": 520,
+        "transfers": 2,
+        "company": "s7-airlines"
+    }
+]

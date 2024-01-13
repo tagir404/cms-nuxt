@@ -1,22 +1,24 @@
 <script setup lang="ts">
-import type { Filter, Option } from "~/utils/types";
+import type { Filter, Option } from "~/utils/types"
+import tickets from "~/utils/tickets.json"
 
-const asideFilters = ref(asideFiltersData);
-const priceFilter = ref(priceFilterData);
+const asideFilters = ref(asideFiltersData)
+const priceFilter = ref(priceFilterData)
 
 function toggleOption(filter: Filter, option: Option) {
-    const filterIndex = asideFilters.value.indexOf(filter);
-    const optionIndex = asideFilters.value[filterIndex].options.indexOf(option);
+    const filterIndex = asideFilters.value.indexOf(filter)
+    const optionIndex = asideFilters.value[filterIndex].options.indexOf(option)
     asideFilters.value[filterIndex].options[optionIndex].checked =
-        !option.checked;
+        !option.checked
 }
 
 function setPriceFilter(option: Option) {
-    const optionIndex = priceFilter.value.indexOf(option);
-    priceFilter.value = priceFilter.value.map(option => {
-        return { ...option, checked: false };
-    });
-    priceFilter.value[optionIndex].checked = !option.checked;
+    const optionIndex = priceFilter.value.indexOf(option)
+    priceFilter.value = priceFilter.value.map(option => ({
+        ...option,
+        checked: false,
+    }))
+    priceFilter.value[optionIndex].checked = true
 }
 </script>
 
@@ -43,7 +45,7 @@ function setPriceFilter(option: Option) {
                                 v-for="option in filter.options"
                                 :key="option.value"
                             >
-                                <BaseCheckbox
+                                <FilterCheckbox
                                     @toggle="toggleOption(filter, option)"
                                     :option="option"
                                     :type="filter.type"
@@ -54,15 +56,21 @@ function setPriceFilter(option: Option) {
                 </aside>
                 <main>
                     <div class="price-filter">
-                        <div
+                        <FilterRadio
                             class="price-filter__option"
-                            :class="{ active: option.checked }"
                             v-for="option in priceFilter"
                             :key="option.value"
-                            @click="setPriceFilter(option)"
-                        >
-                            {{ option.name }}
-                        </div>
+                            :option="option"
+                            name="price-filter"
+                            @toggle="setPriceFilter(option)"
+                        />
+                    </div>
+                    <div class="tickets">
+                        <div
+                            class="tickets__item"
+                            v-for="(ticket, i) in tickets"
+                            :key="i"
+                        ></div>
                     </div>
                 </main>
             </div>
@@ -126,16 +134,6 @@ aside {
     display: flex;
 
     &__option {
-        font-weight: bold;
-        border: 1px solid var(--color-purple);
-        background: var(--color-light-lavender);
-        padding: 18px;
-        cursor: pointer;
-        min-width: 242px;
-        flex: 1;
-        text-align: center;
-        transition: all 200ms linear;
-
         &:not(:last-child) {
             border-right: none;
         }
@@ -146,15 +144,6 @@ aside {
 
         &:last-child {
             border-radius: 0 10px 10px 0;
-        }
-
-        &:hover {
-            background: var(--color-light-purple);
-        }
-
-        &.active {
-            color: #fff;
-            background: var(--color-purple);
         }
     }
 }

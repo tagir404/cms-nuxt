@@ -1,7 +1,7 @@
-import type { FilterTypes } from '~/utils/enums'
+import type { FilterVariant } from '~/utils/enums'
 
 interface Filter {
-    type: FilterTypes,
+    type: FilterVariant,
     title: string,
     options: Option[]
 }
