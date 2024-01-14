@@ -24,7 +24,8 @@ interface Ticket {
     },
     flightTimeInMinutes: number,
     transfers: number,
-    company: string
+    company: string,
+    logo: string
 }
 
 export type { Filter, Option, Ticket }

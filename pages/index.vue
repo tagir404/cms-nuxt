@@ -1,9 +1,31 @@
 <script setup lang="ts">
 import type { Filter, Option } from "~/utils/types"
-import tickets from "~/utils/tickets.json"
+import { ref as dbRef } from "firebase/database"
 
 const asideFilters = ref(asideFiltersData)
 const priceFilter = ref(priceFilterData)
+const currentPriceFilter = computed(
+    () => priceFilter.value.find(filter => filter.checked)?.value
+)
+
+const tickets: Ref<Ticket[]> = useDatabaseList(dbRef(useDatabase()))
+
+const sortedTickets = computed(() => {
+    let sortKey: "price" | "flightTimeInMinutes" | "transfers" = "price"
+    switch (currentPriceFilter.value) {
+        case "cheapest":
+            sortKey = "price"
+            break
+        case "fastest":
+            sortKey = "flightTimeInMinutes"
+            break
+        case "optimal":
+            sortKey = "transfers"
+            break
+    }
+
+    return tickets.value.sort((a, b) => a[sortKey] - b[sortKey])
+})
 
 function toggleOption(filter: Filter, option: Option) {
     const filterIndex = asideFilters.value.indexOf(filter)
@@ -68,11 +90,14 @@ function setPriceFilter(option: Option) {
                     <div class="tickets">
                         <BaseTicket
                             class="tickets__item"
-                            v-for="(ticket, i) in tickets"
+                            v-for="(ticket, i) in sortedTickets"
                             :key="i"
                             :ticket="ticket"
                         />
                     </div>
+                    <button class="show-more-tickets-btn">
+                        Загрузить еще билеты
+                    </button>
                 </main>
             </div>
         </section>
@@ -154,5 +179,16 @@ aside {
     display: flex;
     flex-direction: column;
     gap: 47px;
+    margin-bottom: 74px;
+}
+
+.show-more-tickets-btn {
+    color: #fff;
+    font-size: 24px;
+    background: var(--color-purple);
+    width: 100%;
+    padding: 16px;
+    border-radius: 10px;
+    border: none;
 }
 </style>

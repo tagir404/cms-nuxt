@@ -13,7 +13,7 @@ const props = defineProps<{
                 {{ getFormattedPrice(props.ticket.price) }} Р
             </p>
             <img
-                src="~/assets/img/plane.png"
+                :src="props.ticket.logo"
                 :alt="`Логотип авикомпании ${props.ticket.company}`"
             />
         </div>
@@ -49,6 +49,7 @@ const props = defineProps<{
     &__head {
         display: flex;
         justify-content: space-between;
+        align-items: flex-start;
         margin-bottom: 25px;
     }
 
