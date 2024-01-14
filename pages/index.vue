@@ -66,11 +66,12 @@ function setPriceFilter(option: Option) {
                         />
                     </div>
                     <div class="tickets">
-                        <div
+                        <BaseTicket
                             class="tickets__item"
                             v-for="(ticket, i) in tickets"
                             :key="i"
-                        ></div>
+                            :ticket="ticket"
+                        />
                     </div>
                 </main>
             </div>
@@ -132,6 +133,7 @@ aside {
 
 .price-filter {
     display: flex;
+    margin-bottom: 29px;
 
     &__option {
         &:not(:last-child) {
@@ -146,5 +148,11 @@ aside {
             border-radius: 0 10px 10px 0;
         }
     }
+}
+
+.tickets {
+    display: flex;
+    flex-direction: column;
+    gap: 47px;
 }
 </style>

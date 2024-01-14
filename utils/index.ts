@@ -69,3 +69,5 @@ export const priceFilterData: Option[] = [
         checked: false
     }
 ]
+
+export { getTransfersText, getFormattedPrice, getFlightTimeText } from '~/utils/utils'

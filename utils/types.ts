@@ -12,4 +12,19 @@ interface Option {
     value: string | number,
 }
 
-export type { Filter, Option }
+interface Ticket {
+    price: number,
+    departure: {
+        code: string,
+        time: string
+    },
+    arrival: {
+        code: string,
+        time: string
+    },
+    flightTimeInMinutes: number,
+    transfers: number,
+    company: string
+}
+
+export type { Filter, Option, Ticket }
