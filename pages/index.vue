@@ -2,17 +2,18 @@
 import type { Filter, Option } from "~/utils/types"
 import { ref as dbRef } from "firebase/database"
 
-const asideFilters = ref(asideFiltersData)
-const priceFilter = ref(priceFilterData)
-const currentPriceFilter = computed(
-    () => priceFilter.value.find(filter => filter.checked)?.value
-)
-
 const tickets: Ref<Ticket[]> = useDatabaseList(dbRef(useDatabase()))
+const companyFilter = ref<Filter>(companyFilterData)
+const transfersFilter = ref<Filter>(transfersFilterData)
+const sortInfo = ref<Option[]>(sortData)
+const currentSortInfo = computed(
+    () => sortInfo.value.find(option => option.checked)?.value
+)
+companyFilter.value.options = getCompanyFilterOptions(tickets.value)
 
-const sortedTickets = computed(() => {
+watch(currentSortInfo, () => {
     let sortKey: "price" | "flightTimeInMinutes" | "transfers" = "price"
-    switch (currentPriceFilter.value) {
+    switch (currentSortInfo.value) {
         case "cheapest":
             sortKey = "price"
             break
@@ -24,31 +25,47 @@ const sortedTickets = computed(() => {
             break
     }
 
-    return tickets.value.sort((a, b) => a[sortKey] - b[sortKey])
+    tickets.value.sort((a, b) => a[sortKey] - b[sortKey])
 })
 
-function toggleOption(filter: Filter, option: Option) {
-    const filterIndex = asideFilters.value.indexOf(filter)
-    const optionIndex = asideFilters.value[filterIndex].options.indexOf(option)
-    asideFilters.value[filterIndex].options[optionIndex].checked =
-        !option.checked
+const filteredTickets = computed(() => {
+    const enabledCompanies = companyFilter.value.options.map(option => {
+        if (option.checked) return option.value
+    })
+
+    const enabledTransfers = transfersFilter.value.options.map(option => {
+        if (option.checked) return option.value
+    })
+
+    return tickets.value.filter(
+        ticket =>
+            enabledCompanies.includes(ticket.company.key) &&
+            enabledTransfers.includes(ticket.transfers)
+    )
+})
+
+function toggleOption(option: Option) {
+    option.checked = !option.checked
 }
 
-function setPriceFilter(option: Option) {
-    const optionIndex = priceFilter.value.indexOf(option)
-    priceFilter.value = priceFilter.value.map(option => ({
-        ...option,
-        checked: false,
-    }))
-    priceFilter.value[optionIndex].checked = true
+function changeSortInfoValue(options: Option[], option: Option) {
+    options.forEach(option => (option.checked = false))
+    option.checked = true
 }
+
+const ticketsLength = ref(3)
+function increaseTicketsLength() {
+    ticketsLength.value = ticketsLength.value + 3
+}
+
+const slicedTickets = computed(() => filteredTickets.value.slice(0, ticketsLength.value))
 </script>
 
 <template>
     <div class="wrapper">
         <header>
             <div class="container">
-                <img src="~/assets/img/plane.png" alt="Логотип" />
+                <img class="logo" src="~/assets/img/plane.png" alt="Логотип" />
                 <h1>Поиск авиабилетов</h1>
             </div>
         </header>
@@ -57,7 +74,7 @@ function setPriceFilter(option: Option) {
                 <aside>
                     <div
                         class="aside-filter"
-                        v-for="filter in asideFilters"
+                        v-for="filter in [transfersFilter, companyFilter]"
                         :key="filter.title"
                     >
                         <p class="aside-filter__title">{{ filter.title }}</p>
@@ -68,34 +85,38 @@ function setPriceFilter(option: Option) {
                                 :key="option.value"
                             >
                                 <FilterCheckbox
-                                    @toggle="toggleOption(filter, option)"
+                                    @toggle="toggleOption(option)"
                                     :option="option"
-                                    :type="filter.type"
+                                    :variant="filter.variant"
                                 />
                             </li>
                         </ul>
                     </div>
                 </aside>
                 <main>
-                    <div class="price-filter">
+                    <div class="sort-info">
                         <FilterRadio
-                            class="price-filter__option"
-                            v-for="option in priceFilter"
+                            class="sort-info__option"
+                            v-for="option in sortInfo"
                             :key="option.value"
                             :option="option"
-                            name="price-filter"
-                            @toggle="setPriceFilter(option)"
+                            name="sort-info"
+                            @toggle="changeSortInfoValue(sortInfo, option)"
                         />
                     </div>
                     <div class="tickets">
                         <BaseTicket
                             class="tickets__item"
-                            v-for="(ticket, i) in sortedTickets"
-                            :key="i"
+                            v-for="ticket in slicedTickets"
+                            :key="ticket.id"
                             :ticket="ticket"
                         />
                     </div>
-                    <button class="show-more-tickets-btn">
+                    <button
+                        class="show-more-tickets-btn"
+                        v-if="slicedTickets.length !== filteredTickets.length"
+                        @click="increaseTicketsLength"
+                    >
                         Загрузить еще билеты
                     </button>
                 </main>
@@ -156,7 +177,7 @@ aside {
     }
 }
 
-.price-filter {
+.sort-info {
     display: flex;
     margin-bottom: 29px;
 
@@ -190,5 +211,49 @@ aside {
     padding: 16px;
     border-radius: 10px;
     border: none;
+    transition: all 200ms linear;
+    border: 1px solid transparent;
+
+    &:hover {
+        background: #fff;
+        color: var(--color-purple);
+        border: 1px solid var(--color-purple);
+    }
+}
+
+@media (max-width: 768px) {
+    .wrapper {
+        padding-top: 31px;
+    }
+
+    header .container {
+        justify-content: center;
+    }
+
+    .logo {
+        width: 80px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    aside {
+        display: none;
+    }
+
+    main {
+        width: 100%;
+    }
+
+    .tickets {
+        margin-bottom: 54px;
+        gap: 35px;
+    }
+
+    .show-more-tickets-btn {
+        font-size: 16px;
+        padding: 14px;
+    }
 }
 </style>

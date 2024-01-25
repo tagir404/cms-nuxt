@@ -35,7 +35,6 @@ label {
     gap: 19px;
     cursor: pointer;
     user-select: none;
-    min-width: 242px;
     border: 1px solid var(--color-purple);
     overflow: hidden;
 }
@@ -53,9 +52,13 @@ div {
     background: var(--color-light-lavender);
     padding: 18px;
     cursor: pointer;
-    flex: 1;
     text-align: center;
     transition: all 200ms linear;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 div:hover {
@@ -65,5 +68,16 @@ div:hover {
 input:checked ~ div {
     color: #fff;
     background: var(--color-purple);
+}
+
+@media (max-width: 768px) {
+    label {
+        flex: 1;
+    }
+
+    div {
+        font-size: 12px;
+        padding: 14px;
+    }
 }
 </style>

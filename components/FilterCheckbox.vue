@@ -3,7 +3,7 @@ import type { Option } from "~/utils/types"
 
 const props = defineProps<{
     option: Option
-    type: string
+    variant: string
 }>()
 
 const emit = defineEmits<{
@@ -12,7 +12,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-    <label :class="type">
+    <label :class="variant">
         <input
             type="checkbox"
             :checked="props.option.checked"

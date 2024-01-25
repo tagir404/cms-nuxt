@@ -1,9 +1,9 @@
 import type { FilterVariant } from '~/utils/enums'
 
 interface Filter {
-    type: FilterVariant,
+    variant: FilterVariant,
     title: string,
-    options: Option[]
+    options: Option[],
 }
 
 interface Option {
@@ -13,6 +13,7 @@ interface Option {
 }
 
 interface Ticket {
+    id: number,
     price: number,
     departure: {
         code: string,
@@ -24,7 +25,10 @@ interface Ticket {
     },
     flightTimeInMinutes: number,
     transfers: number,
-    company: string,
+    company: {
+        key: string,
+        name: string
+    },
     logo: string
 }
 

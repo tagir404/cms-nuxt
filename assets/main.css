@@ -7,6 +7,10 @@
     --color-light-lavender: #E8EBF2;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Inter', sans-serif;
     color: var(--color-purple);

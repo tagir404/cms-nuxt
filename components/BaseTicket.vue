@@ -13,8 +13,9 @@ const props = defineProps<{
                 {{ getFormattedPrice(props.ticket.price) }} Р
             </p>
             <img
+                class="ticket__logo"
                 :src="props.ticket.logo"
-                :alt="`Логотип авикомпании ${props.ticket.company}`"
+                :alt="`Логотип авикомпании ${props.ticket.company.name}`"
             />
         </div>
         <div class="ticket__info">
@@ -45,17 +46,23 @@ const props = defineProps<{
     padding: 25px 40px;
     border-radius: 10px;
     background: var(--color-light-lavender);
+    height: 174px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
     &__head {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         margin-bottom: 25px;
+        flex: 1;
     }
 
     &__price {
         font-size: 32px;
         font-weight: bold;
+        align-self: flex-end;
     }
 
     &__info {
@@ -70,6 +77,27 @@ const props = defineProps<{
 
         p:first-child {
             color: var(--color-lavender);
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .ticket {
+        padding: 25px;
+        height: auto;
+
+        &__price {
+            font-size: 20px;
+            align-self: center;
+        }
+
+        &__info-block {
+            font-size: 12px;
+        }
+
+        &__logo {
+            width: 50%;
+            max-width: min-content;
         }
     }
 }
